@@ -1,0 +1,28 @@
+name: Deploy NetSuite SDF
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Validate and Deploy
+    runs-on: ubuntu-latest
+    environment: netsuite-production
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      - name: Install SuiteCloud CLI
+        run: npm install --global @oracle/suitecloud-cli
