@@ -15,7 +15,7 @@ define(['N/currentRecord', 'N/log'], function (currentRecord, log) {
      */
     const pageInit = (context) => {
         try {
-            
+            console.log('Test')
         } catch (error) {
             log.error('error in pageInit', { message: error.message, stack: error.stack });
             console.error('error in pageInit', { message: error.message, stack: error.stack });
