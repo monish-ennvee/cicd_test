@@ -40,3 +40,6 @@ jobs:
           | 
           suitecloud project:validate --json > validate.json
           echo "Completed" 
+
+      - name: Deploy Project
+        run: suitecloud project:deploy --json > deploy.json
