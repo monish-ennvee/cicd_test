@@ -36,9 +36,6 @@ Thumbs.db
 # Output of 'npm pack'
 *.tgz
 
-# Project config
-project.json
-
 **.exe
 config.toml
 .runner_system_id

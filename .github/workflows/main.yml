@@ -30,8 +30,13 @@ jobs:
       - name: Install SDF
         run: npm install -g @oracle/suitecloud-cli
 
+      - name: Restore CI credentials
+        run: |
+          mkdir -p ~/.suitecloud-sdk
+          echo "${{ secrets.SUITECLOUD_CREDENTIALS_P12 }}" | base64 -d > ~/.suitecloud-sdk/credentials_ci.p12
+
       - name: Validate Project CLI
         run:
           | 
-          suitecloud project:validate --applyinstallprefs
+          suitecloud project:validate --json > validate.json
           echo "Completed" 
