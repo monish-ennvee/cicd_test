@@ -13,6 +13,10 @@ jobs:
   validate:
     name: Validate SDF Project
     runs-on: ubuntu-latest
+    env:
+      SUITECLOUD_CLI_ACCEPT_LICENSE: "true"
+      SUITECLOUD_CI: "1"
+      SUITECLOUD_CI_PASSKEY: ${{ secrets.SUITECLOUD_CI_PASSKEY }}
     
     steps:
       - name: Checkout repository
