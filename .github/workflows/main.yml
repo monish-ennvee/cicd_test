@@ -10,19 +10,19 @@ permissions:
   contents: read
 
 jobs:
-  deploy:
-    name: Validate and Deploy
+  validate:
+    name: Validate SDF Project
     runs-on: ubuntu-latest
-    environment: netsuite-production
-
+    
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
-
+        uses: actions/checkout@v7
+      
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: "24"
 
-      - name: Install SuiteCloud CLI
-        run: npm install --global @oracle/suitecloud-cli
+      - name: Install SDF
+        run: npm install -g @oracle/suitecloud-cli
+      
