@@ -25,4 +25,9 @@ jobs:
 
       - name: Install SDF
         run: npm install -g @oracle/suitecloud-cli
-      
+
+      - name: Validate Project CLI
+        run:
+          | 
+          suitecloud project:validate --applyinstallprefs
+          echo "Completed" 
