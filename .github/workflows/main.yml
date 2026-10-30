@@ -1,7 +1,8 @@
 name: Deploy NetSuite SDF
 
 on:
-  push:
+  pull_request:
+    types: [closed]
     branches:
       - main
   workflow_dispatch:
@@ -10,18 +11,20 @@ permissions:
   contents: read
 
 jobs:
-  validate:
-    name: Validate SDF Project
+  validate-and-deploy:
+    name: Deploy SDF to Production
+    if: github.event_name == 'workflow_dispatch' || (github.event.pull_request.merged == true && github.head_ref == 'sandbox')
     runs-on: ubuntu-latest
+    # environment: prod
     env:
       SUITECLOUD_CLI_ACCEPT_LICENSE: "true"
       SUITECLOUD_CI: "1"
       SUITECLOUD_CI_PASSKEY: ${{ secrets.SUITECLOUD_CI_PASSKEY }}
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7
-      
+
       - name: Set up Node.js
         uses: actions/setup-node@v7
         with:
@@ -30,16 +33,23 @@ jobs:
       - name: Install SDF
         run: npm install -g @oracle/suitecloud-cli
 
-      - name: Restore CI credentials
+      - name: Restore production CI credentials
         run: |
           mkdir -p ~/.suitecloud-sdk
           echo "${{ secrets.SUITECLOUD_CREDENTIALS_P12 }}" | base64 -d > ~/.suitecloud-sdk/credentials_ci.p12
 
+      - name: Use production auth ID
+        env:
+          SUITECLOUD_AUTH_ID: ${{ secrets.SUITECLOUD_AUTH_ID_PROD }}
+        run: |
+          if [ -n "$SUITECLOUD_AUTH_ID" ]; then
+            node -e "const fs=require('fs'); fs.writeFileSync('project.json', JSON.stringify({ defaultAuthId: process.env.SUITECLOUD_AUTH_ID }, null, '\t') + '\n')"
+          fi
+
       - name: Validate Project CLI
-        run:
-          | 
+        run: |
           suitecloud project:validate --json > validate.json
-          echo "Completed" 
+          echo "Completed"
 
       - name: Deploy Project
         run: suitecloud project:deploy --json > deploy.json
