@@ -21,6 +21,8 @@ define(['N/currentRecord', 'N/log'], function (currentRecord, log) {
             console.log('Hi')
             console.log('Merge')
             console.log('Merge')
+            console.log('Merge')
+            console.log('Merge')
         } catch (error) {
             log.error('error in pageInit', { message: error.message, stack: error.stack });
             console.error('error in pageInit', { message: error.message, stack: error.stack });
