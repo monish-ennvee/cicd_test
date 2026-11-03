@@ -25,10 +25,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v7
 
-      - name: Restore project.json
-        run: |
-          git checkout HEAD^1 -- project.json
-
       - name: Set up Node.js
         uses: actions/setup-node@v7
         with:
