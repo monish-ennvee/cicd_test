@@ -42,13 +42,28 @@ jobs:
           mkdir -p ~/.suitecloud-sdk
           echo "${{ secrets.SUITECLOUD_CREDENTIALS_P12 }}" | base64 -d > ~/.suitecloud-sdk/credentials_ci.p12
 
-      - name: Use production auth ID
+      - name: Generate production project.json
         env:
           SUITECLOUD_AUTH_ID: ${{ secrets.SUITECLOUD_AUTH_ID_PROD }}
         run: |
-          if [ -n "$SUITECLOUD_AUTH_ID" ]; then
-            node -e "const fs=require('fs'); fs.writeFileSync('project.json', JSON.stringify({ defaultAuthId: process.env.SUITECLOUD_AUTH_ID }, null, '\t') + '\n')"
-          fi
+          node -e "
+            const fs = require('fs');
+            const authId = process.env.SUITECLOUD_AUTH_ID;
+
+            if (!authId) {
+              throw new Error('Production Auth ID is not configured');
+            }
+
+            const projectConfig = {
+              defaultAuthId: authId
+            };
+
+            fs.writeFileSync(
+              'project.json',
+              JSON.stringify(projectConfig, null, '\t') + '\n'
+            );
+          "
+
 
       - name: Validate Project CLI
         run: |
